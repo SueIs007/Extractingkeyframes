@@ -1,0 +1,40 @@
+import cv2
+import os
+
+# Set the path for the existing video and the "test" folder in Google Drive
+video_path = "27K240fpsWide.mp4"
+keyframes_folder = "/selectedframes"
+
+# Ensure the keyframes folder exists
+if not os.path.exists(keyframes_folder):
+    os.makedirs(keyframes_folder)
+
+# Open the video using OpenCV
+cap = cv2.VideoCapture(video_path)
+
+# Total frames in the video
+total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+# Number of keyframe images to be extracted
+no_of_frames_to_return = 30
+
+# Calculate the interval between keyframes
+interval = total_frames // no_of_frames_to_return
+
+for i in range(no_of_frames_to_return):
+    # Set the frame position
+    cap.set(cv2.CAP_PROP_POS_FRAMES, i * interval)
+
+    # Read the frame
+    ret, frame = cap.read()
+
+    if ret:
+
+
+        # Save the keyframe
+        keyframe_path = os.path.join(keyframes_folder, f"keyframe_{i}.jpg")
+        cv2.imwrite(keyframe_path, frame)
+
+cap.release()
+
+print("Keyframes extraction completed!")
